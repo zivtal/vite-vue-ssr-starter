@@ -5,11 +5,10 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build && vite build --ssr",
-    "serve": "node server.js",
+    "serve": "vite build --ssr && node server.js",
     "build:client": "vite build",
     "build:server": "vite build --ssr",
-    "start": "npm run build && npm run serve",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "npm run build && npm run serve"
   },
   "keywords": [],
   "author": "",
