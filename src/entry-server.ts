@@ -1,18 +1,15 @@
-import { createSSRApp } from 'vue';
-import App from './App.vue';
-import { createRouter } from 'vue-router';
-import { createMemoryHistory } from 'vue-router';
-import routes from './routes';
+import { renderToString } from 'vue/server-renderer'
+import { createApp } from './main'
 
-export function createApp() {
-    const app = createSSRApp(App);
+export async function render() {
+  const { app } = createApp()
 
-    const router = createRouter({
-        history: createMemoryHistory(),
-        routes,
-    });
+  // passing SSR context object which will be available via useSSRContext()
+  // @vitejs/plugin-vue injects code into a component's setup() that registers
+  // itself on ctx.modules. After the render, ctx.modules would contain all the
+  // components that have been instantiated during this render call.
+  const ctx = {}
+  const html = await renderToString(app, ctx)
 
-    app.use(router);
-
-    return { app, router };
+  return { html }
 }
