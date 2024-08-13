@@ -3,16 +3,12 @@
   <button @click="goToAbout">Go to About</button>
 </template>
 
-<script lang="ts">
-export default {
-  methods: {
-    goToAbout() {
-      this.$router.push('/about')
-    },
-  },
-}
+<script setup lang="ts">
+import {useRouter} from 'vue-router'
+
+const router = useRouter();
+
+const goToAbout = () => router.push('/about');
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>
