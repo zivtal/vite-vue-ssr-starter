@@ -1,7 +1,10 @@
-import { createApp } from './app';
+import { createSSRApp } from 'vue'
+import App from './App.vue'
 
-const { app, router } = createApp();
-
-router.isReady().then(() => {
-    app.mount('#app');
-});
+// SSR requires a fresh app instance per request, therefore we export a function
+// that creates a fresh app instance. If using Vuex, we'd also be creating a
+// fresh store here.
+export function createApp() {
+  const app = createSSRApp(App)
+  return { app }
+}
