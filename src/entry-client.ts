@@ -1,7 +1,7 @@
-import './style.css'
-import { createApp } from './main'
-import router from "./routes"
+import "./styles/main.scss";
+import { createApp } from "./main";
+import router from "./routes";
 
-const { app } = createApp()
+const { app } = createApp();
 
-app.use(router).mount('#app')
+app.use(router).mount("#app");

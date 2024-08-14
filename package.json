@@ -9,16 +9,19 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "vue": "^3.4.35",
     "compression": "^1.7.4",
     "express": "^4.19.2",
+    "prettier": "^3.3.3",
     "sirv": "^2.0.4",
+    "vue": "^3.4.35",
     "vue-router": "^4.4.3"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.1.2",
     "typescript": "^5.5.3",
     "vite": "^5.4.0",
-    "vue-tsc": "^2.0.29"
+    "vue-tsc": "^2.0.29",
+    "sass": "^1.69.5",
+    "sass-loader": "^13.2.0"
   }
 }
