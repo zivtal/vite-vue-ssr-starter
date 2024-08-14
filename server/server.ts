@@ -13,6 +13,7 @@ export async function createServer(): Promise<void> {
   const resolve = (p: string) => path.resolve(__dirname, p)
   const isProduction = process.env.NODE_ENV === 'production'
 
+
   let vite: ViteDevServer
   let manifest: Record<string, any> = {}
   let indexProd: string = ""
@@ -21,20 +22,20 @@ export async function createServer(): Promise<void> {
 
     manifest = JSON.parse(
       fs.readFileSync(
-        resolve("dist/client/.vite/ssr-manifest.json"),
+        resolve("../dist/client/.vite/ssr-manifest.json"),
         "utf-8"
       )
     )
 
     indexProd = fs.readFileSync(
-      resolve("dist/client/index.html"),
+      resolve("../dist/client/index.html"),
       "utf-8"
     )
 
     app.use((await import("compression")).default())
     app.use(
       "/test", (
-      (await import("serve-static")).default(resolve("dist/client"), {
+      (await import("serve-static")).default(resolve("../dist/client"), {
         index: false
       })
     )
@@ -66,14 +67,14 @@ export async function createServer(): Promise<void> {
       
       if (!isProduction) {
         // always read fresh template in dev
-        template = fs.readFileSync(resolve('index.html'), 'utf-8')
+        template = fs.readFileSync(resolve('../index.html'), 'utf-8')
         template = await vite.transformIndexHtml(url, template)
-        render = (await vite.ssrLoadModule('src/entry-server.ts')).render
+        render = (await vite.ssrLoadModule('../client/entry-server.ts')).render
       } 
       else {
         template = indexProd
         // @ts-ignore
-        render = (await import('./dist/server/entry-server.js')).render
+        render = (await import('../dist/server/entry-server.js')).render
       }
 
       const {html:appHtml} = await render(url)

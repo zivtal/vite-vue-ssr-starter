@@ -1,3 +1,5 @@
+import './style.css'
+
 import { createSSRApp } from 'vue'
 import { buildRouter } from "./routes"
 import App from './App.vue'
