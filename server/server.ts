@@ -12,12 +12,9 @@ const MemoryStore = createMemoryStore(session);
 // Create http server
 const app = express();
 
+// Set up middleware
 app.use(bodyParser.json());
 app.use(cookieParser());
-
-// Set up session and cookie middleware
-// The data should be secure and stored in Redis
-
 app.use(
   session({
     store: new MemoryStore({ checkPeriod: 86400000 }), // 24h
