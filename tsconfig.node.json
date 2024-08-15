@@ -20,5 +20,12 @@
   "ts-node": {
     "esm": true
   },
+  "paths": {
+    "@/*": ["./server/src/*"],
+    "@config/*": ["./server/config/*"],
+    "@api/*": ["./server/api/*"],
+    "@shared/*": ["./server/shared/*"],
+    "@json/*": ["./server/json/*"]
+  },
   "include": ["vite.config.ts", "*.ts", "server/**/*.ts"]
 }

@@ -4,30 +4,18 @@ import {
   createMemoryHistory,
   type RouteRecordRaw,
 } from "vue-router";
+import ROUTES from "./routes.ts";
 
-import Home from "../views/home.vue";
-import About from "../views/about.vue";
+const load = async (key: string = "router") => {
+  const data = localStorage.getItem(key) || undefined;
 
-const Index = [
-  { path: "/", component: Home },
-  { path: "/about", component: About },
-];
-
-const load = () => {
-  try {
-    const routes = JSON.parse(localStorage.getItem("router")!);
-    return create(routes);
-  } catch (error) {
-    console.error("router:load", error);
-
-    throw error;
-  } finally {
-    localStorage.removeItem("router");
-  }
+  return create(data);
 };
 
-const create = (routes: Readonly<Array<RouteRecordRaw>> = Index) => {
+const create = (data: Readonly<Array<RouteRecordRaw>> | string = ROUTES) => {
   try {
+    const routes = typeof data === "string" ? JSON.parse(data) : data;
+
     return createRouter({
       history: import.meta.env.SSR ? createMemoryHistory() : createWebHistory(),
       routes,

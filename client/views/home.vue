@@ -1,15 +1,16 @@
 <template>
   <div>Home</div>
+
   <button @click="goToAbout">Go to About</button>
 </template>
 
 <script setup lang="ts">
-import { useRouter } from "vue-router";
+import { useRouter } from 'vue-router';
 
 const router = useRouter();
 
 const goToAbout = () => {
-  router.push("/about");
+  router.push('/about');
 };
 </script>
 
