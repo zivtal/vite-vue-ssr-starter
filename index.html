@@ -1,13 +1,30 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Vite App</title>
     <!--preload-links-->
-  </head>
-  <body>
-    <div id="app"><!--app-html--></div>
-    <script lang="ts" type="module" src="/client/entry-client.ts"></script>
-  </body>
+</head>
+
+<body>
+<script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function () {
+            navigator.serviceWorker.register('/sw.js').then(
+                function (registration) {
+                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                },
+                function (err) {
+                    console.log('ServiceWorker registration failed: ', err);
+                }
+            );
+        });
+    }
+</script>
+
+<div id="app"><!--app-html--></div>
+
+<script lang="ts" type="module" src="/client/entry-client.ts"></script>
+</body>
 </html>
