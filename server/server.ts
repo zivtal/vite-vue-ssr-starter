@@ -29,24 +29,13 @@ app.use(
 app.use("/static", express.static("public"));
 app.use("/sw.js", express.static("./sw.js"));
 
-export const { vite, templateHtml } = await createViteSSR(app);
+export const { vite, render, templateHtml } = await createViteSSR(app);
 
 // Serve HTML
 app.use("*", async (req, res) => {
   try {
     const url = req.originalUrl.replace("/test/", "/");
-    const render = async (url: string, isProduction: boolean = false) => {
-      if (isProduction) {
-        // @ts-ignore
-        return (await import("../dist/client/entry-server.js")).render;
-      }
-
-      await vite.transformIndexHtml(url, templateHtml);
-      return (await vite.ssrLoadModule("../client/entry-server.ts")).render;
-    };
-
-    const { html: appHtml } = await render(url, config.IS_PRODUCTION);
-    const html = templateHtml.replace(`<!--app-html-->`, appHtml);
+    const html = await render(url, config.IS_PRODUCTION);
 
     res.status(200).set({ "Content-Type": "text/html" }).end(html);
   } catch (e: any) {

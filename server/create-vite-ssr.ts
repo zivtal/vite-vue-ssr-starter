@@ -14,6 +14,7 @@ export default async (
   vite: ViteDevServer;
   templateHtml: string;
   ssrManifest?: Record<string, any>;
+  render: (url: string, isProduction: boolean) => Promise<string>;
 }> => {
   const __dirname = path.dirname(fileURLToPath(import.meta.url));
   const resolve = (p: string) => path.resolve(__dirname, p);
@@ -52,9 +53,24 @@ export default async (
     app.use(vite.middlewares);
   }
 
+  const render = async (url: string, isProduction: boolean = false) => {
+    let html: string = "";
+
+    if (isProduction) {
+      // @ts-ignore
+      html = (await import("../dist/client/entry-server.js")).render;
+    } else {
+      await vite.transformIndexHtml(url, templateHtml);
+      html = (await vite.ssrLoadModule("../client/entry-server.ts")).render;
+    }
+
+    return templateHtml.replace(`<!--app-html-->`, html);
+  };
+
   return {
     vite,
     templateHtml,
     ssrManifest,
+    render,
   };
 };
