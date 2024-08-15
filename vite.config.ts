@@ -6,27 +6,28 @@ import vueDevTools from 'vite-plugin-vue-devtools';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const resolve = (p: string) => path.resolve(__dirname, p);
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     vue(),
     eslintPlugin({
-      overrideConfigFile: path.resolve(__dirname, './.eslintrc.cjs'), // or .json, .yml, etc.
+      overrideConfigFile: resolve('.eslintrc.cjs'), // or .json, .yml, etc.
     }),
     vueDevTools(),
   ],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './client'),
-      '@assets': path.resolve(__dirname, './client/assets'),
-      '@router': path.resolve(__dirname, './client/router'),
-      '@shared': path.resolve(__dirname, './client/shared'),
-      '@store': path.resolve(__dirname, './client/store'),
-      '@styles': path.resolve(__dirname, './client/styles'),
-      '@views': path.resolve(__dirname, './client/views'),
-      '@locale': path.resolve(__dirname, './client/locale'),
-      '@components': path.resolve(__dirname, './client/shared/components'),
+      '@': resolve('client'),
+      '@assets': resolve('client/assets'),
+      '@router': resolve('client/router'),
+      '@shared': resolve('client/shared'),
+      '@store': resolve('client/store'),
+      '@styles': resolve('client/styles'),
+      '@views': resolve('client/views'),
+      '@locale': resolve('client/locale'),
+      '@components': resolve('client/components'),
     },
   },
   css: {
