@@ -10,13 +10,7 @@ const resolve = (p: string) => path.resolve(__dirname, p);
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [
-    vue(),
-    eslintPlugin({
-      overrideConfigFile: resolve('.eslintrc.cjs'), // or .json, .yml, etc.
-    }),
-    vueDevTools(),
-  ],
+  plugins: [vue(), eslintPlugin({ overrideConfigFile: resolve('.eslintrc.cjs') }), vueDevTools()],
   resolve: {
     alias: {
       '@': resolve('client'),
