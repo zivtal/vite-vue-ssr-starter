@@ -7,7 +7,6 @@
     <!--preload-links-->
 </head>
 
-<body>
 <script>
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', function () {
@@ -22,9 +21,9 @@
         });
     }
 </script>
-
-<div id="app"><!--app-html--></div>
-
 <script lang="ts" type="module" src="/client/entry-client.ts"></script>
+
+<body>
+<div id="app"><!--app-html--></div>
 </body>
 </html>

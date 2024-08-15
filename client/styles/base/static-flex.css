@@ -1,0 +1,208 @@
+@media screen and (max-width: 640px) {
+  :root {
+    --col-ratio: 4;
+  }
+}
+
+@media screen and (min-width: 640px) and (max-width: 800px) {
+  :root {
+    --col-ratio: 2;
+  }
+}
+
+@media screen and (min-width: 800px) and (max-width: 900px) {
+  :root {
+    --col-ratio: 1.33;
+  }
+}
+
+@media screen and (min-width: 900px) {
+  :root {
+    --col-ratio: 1;
+  }
+}
+
+:root {
+  --col-step: calc(100% / 12);
+  --col-padding: calc(0.75rem / var(--col-ratio));
+  --col-width-1: calc(min(calc(var(--col-step) * 1) * var(--col-ratio), 100%));
+  --col-width-2: calc(min(calc(var(--col-step) * 2) * var(--col-ratio), 100%));
+  --col-width-3: calc(min(calc(var(--col-step) * 3) * var(--col-ratio), 100%));
+  --col-width-4: calc(min(calc(var(--col-step) * 4) * var(--col-ratio), 100%));
+  --col-width-5: calc(min(calc(var(--col-step) * 5) * var(--col-ratio), 100%));
+  --col-width-6: calc(min(calc(var(--col-step) * 6) * var(--col-ratio), 100%));
+  --col-width-7: calc(min(calc(var(--col-step) * 7) * var(--col-ratio), 100%));
+  --col-width-8: calc(min(calc(var(--col-step) * 8) * var(--col-ratio), 100%));
+  --col-width-9: calc(min(calc(var(--col-step) * 9) * var(--col-ratio), 100%));
+  --col-width-10: calc(min(calc(var(--col-step) * 10) * var(--col-ratio), 100%));
+  --col-width-11: calc(min(calc(var(--col-step) * 11) * var(--col-ratio), 100%));
+  --col-width-12: 100%;
+}
+
+.row-flex,
+[class*='row-flex-'] {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+}
+
+.row-flex-1 > * {
+  flex: 0 0 var(--col-width-1);
+  width: var(--col-width-1);
+  padding: var(--col-padding);
+}
+
+.row-flex-2 > * {
+  flex: 0 0 var(--col-width-2);
+  width: var(--col-width-2);
+  padding: var(--col-padding);
+}
+
+.row-flex-3 > * {
+  flex: 0 0 var(--col-width-3);
+  width: var(--col-width-3);
+  padding: var(--col-padding);
+}
+
+.row-flex-4 > * {
+  flex: 0 0 var(--col-width-4);
+  width: var(--col-width-4);
+  padding: var(--col-padding);
+}
+
+.row-flex-5 > * {
+  flex: 0 0 var(--col-width-5);
+  width: var(--col-width-5);
+  padding: var(--col-padding);
+}
+
+.row-flex-6 > * {
+  flex: 0 0 var(--col-width-6);
+  width: var(--col-width-6);
+  padding: var(--col-padding);
+}
+
+.row-flex-7 > * {
+  flex: 0 0 var(--col-width-7);
+  width: var(--col-width-7);
+  padding: var(--col-padding);
+}
+
+.row-flex-8 > * {
+  flex: 0 0 var(--col-width-8);
+  width: var(--col-width-8);
+  padding: var(--col-padding);
+}
+
+.row-flex-9 > * {
+  flex: 0 0 var(--col-width-9);
+  width: var(--col-width-9);
+  padding: var(--col-padding);
+}
+
+.row-flex-10 > * {
+  flex: 0 0 var(--col-width-10);
+  width: var(--col-width-10);
+  padding: var(--col-padding);
+}
+
+.row-flex-11 > * {
+  flex: 0 0 var(--col-width-11);
+  width: var(--col-width-11);
+  padding: var(--col-padding);
+}
+
+.row-flex-12 > * {
+  flex: 0 0 var(--col-width-12);
+  width: var(--col-width-12);
+  padding: var(--col-padding);
+}
+
+.row-flex-auto > * {
+  flex: 1 0 0;
+  width: initial;
+  padding: var(--col-padding);
+}
+
+.row-flex-fit > * {
+  width: fit-content;
+  padding: var(--col-padding);
+}
+
+.col-flex-1 {
+  flex: 0 0 var(--col-width-1) !important;
+  width: var(--col-width-1) !important;
+  padding: var(--col-padding);
+}
+
+.col-flex-2 {
+  flex: 0 0 var(--col-width-2) !important;
+  width: var(--col-width-2) !important;
+  padding: var(--col-padding);
+}
+
+.col-flex-3 {
+  flex: 0 0 var(--col-width-3) !important;
+  width: var(--col-width-3) !important;
+  padding: var(--col-padding);
+}
+
+.col-flex-4 {
+  flex: 0 0 var(--col-width-4) !important;
+  width: var(--col-width-4) !important;
+  padding: var(--col-padding);
+}
+
+.col-flex-5 {
+  flex: 0 0 var(--col-width-5) !important;
+  width: var(--col-width-5) !important;
+  padding: var(--col-padding);
+}
+
+.col-flex-6 {
+  flex: 0 0 var(--col-width-6) !important;
+  width: var(--col-width-6) !important;
+  padding: var(--col-padding);
+}
+
+.col-flex-7 {
+  flex: 0 0 var(--col-width-7) !important;
+  width: var(--col-width-7) !important;
+  padding: var(--col-padding);
+}
+
+.col-flex-8 {
+  flex: 0 0 var(--col-width-8) !important;
+  width: var(--col-width-8) !important;
+  padding: var(--col-padding);
+}
+
+.col-flex-9 {
+  flex: 0 0 var(--col-width-9) !important;
+  width: var(--col-width-9) !important;
+  padding: var(--col-padding);
+}
+
+.col-flex-10 {
+  flex: 0 0 var(--col-width-10) !important;
+  width: var(--col-width-10) !important;
+  padding: var(--col-padding);
+}
+
+.col-flex-11 {
+  flex: 0 0 var(--col-width-11) !important;
+  width: var(--col-width-11) !important;
+  padding: var(--col-padding);
+}
+
+.col-flex-12 {
+  flex: 0 0 var(--col-width-12) !important;
+  width: var(--col-width-12) !important;
+  padding: var(--col-padding);
+}
+
+.col-flex-auto {
+  flex: 1 0 0 !important;
+  width: initial !important;
+  padding: var(--col-padding);
+}

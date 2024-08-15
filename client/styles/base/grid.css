@@ -1,0 +1,15 @@
+.d-grid {
+  display: grid;
+}
+
+.grid-fit-column {
+  grid-column: 1 / -1;
+}
+
+.col-grid-auto-280 {
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.col-grid-auto-360 {
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+}

@@ -27,7 +27,12 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        additionalData: '@import "./client/styles/_mixins.scss";',
+        additionalData:
+          '@import "./client/styles/_variables.scss";' +
+          '@import "./client/styles/_mixins.scss";' +
+          '@import "./client/styles/_colors.scss";' +
+          '@import "./client/styles/_transitions.scss";' +
+          '@import "./client/styles/_fonts.scss";',
       },
     },
   },

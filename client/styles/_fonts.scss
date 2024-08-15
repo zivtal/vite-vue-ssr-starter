@@ -1,0 +1,183 @@
+$font_sizes: 10, 12, 14, 16, 18, 20, 22, 24, 32, 48;
+
+$font_weights: (
+  'slim': 300,
+  'regular': 400,
+  'medium': 500,
+  'semibold': 600,
+  'bold': 700,
+  'extrabold': 900,
+);
+
+$line_heights: 16, 18, 20, 22, 24, 26, 28, 30, 32, 48;
+
+//@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,400i,500,600,700,700i&display=swap');
+//@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;400i,500,600,700&display=swap');
+
+html {
+  font-family: 'Roboto', 'Open Sans', sans-serif;
+  font-size: 16px;
+}
+
+:root {
+  --base-scale: 1;
+
+  @each $font_size in $font_sizes {
+    --font-size-#{$font_size}: calc(var(--base-scale) * #{$font_size}px);
+  }
+
+  @each $key, $value in $font_weights {
+    --font-weight-#{$key}: #{$value};
+  }
+
+  @each $line_height in $font_sizes {
+    --line-height-#{$line_height}: calc(var(--base-scale) * #{$line_height}px);
+  }
+}
+
+.text-title-1 {
+  @include max-mobile-layout {
+    font-size: var(--font-size-16);
+    line-height: var(--line-height-22);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  @include min-mobile-layout {
+    font-size: var(--font-size-18);
+    line-height: var(--line-height-24);
+    font-weight: var(--font-weight-semibold);
+  }
+}
+
+.text-title-2 {
+  @include max-mobile-layout {
+    font-size: var(--font-size-18);
+    line-height: var(--line-height-24);
+  }
+
+  @include min-mobile-layout {
+    font-size: var(--font-size-22);
+    line-height: var(--line-height-28);
+  }
+}
+
+.text-title-3 {
+  @include max-mobile-layout {
+    font-size: var(--font-size-20);
+    line-height: var(--line-height-26);
+    font-weight: var(--font-weight-bold);
+  }
+
+  @include min-mobile-layout {
+    font-size: var(--font-size-24);
+    line-height: var(--line-height-30);
+    font-weight: var(--font-weight-bold);
+  }
+}
+
+.text-body-1 {
+  font-size: var(--font-size-16);
+  line-height: var(--line-height-22);
+}
+
+.text-body-2 {
+  @include max-mobile-layout {
+    font-size: var(--font-size-16);
+    line-height: var(--line-height-22);
+  }
+
+  @include min-mobile-layout {
+    font-size: var(--font-size-18);
+    line-height: var(--line-height-24);
+  }
+}
+
+.text-body-3 {
+  @include max-mobile-layout {
+    font-size: var(--font-size-18);
+    line-height: var(--line-height-24);
+  }
+
+  @include min-mobile-layout {
+    font-size: var(--font-size-20);
+    line-height: var(--line-height-26);
+  }
+}
+
+.text-warning-1 {
+  color: var(--color-red-500);
+}
+
+.text-subtitle-1 {
+  font-size: var(--font-size-14);
+  line-height: var(--line-height-20);
+  color: var(--color-mono-800);
+}
+
+.text-subtitle-2 {
+  font-size: var(--font-size-12);
+  line-height: var(--line-height-18);
+  color: var(--color-mono-700);
+}
+
+.text-subtitle-3 {
+  font-size: var(--font-size-10);
+  line-height: var(--line-height-18);
+  color: var(--color-mono-600);
+}
+
+.text-value-1 {
+  font-size: var(--font-size-16);
+  line-height: var(--line-height-22);
+  color: var(--color-mono-700);
+}
+
+.vz-value-2 {
+  font-size: var(--font-size-14);
+  line-height: var(--line-height-20);
+  color: var(--color-mono-700);
+}
+
+//[class*='text-title-'] {
+//  color: var(--color-primary-900);
+//  font-weight: var(--font-weight-bold);
+//}
+
+[class*='text-value-'] {
+  color: var(--color-mono-700);
+  font-weight: var(--font-weight-regular);
+}
+
+[class^='text-'][class$='-regular'] {
+  font-weight: var(--font-weight-regular) !important;
+}
+
+[class^='text-'][class$='-medium'] {
+  font-weight: var(--font-weight-medium) !important;
+}
+
+[class^='text-'][class$='-semibold'] {
+  font-weight: var(--font-weight-semibold) !important;
+}
+
+[class^='text-'][class$='-bold'] {
+  font-weight: var(--font-weight-bold) !important;
+}
+
+@mixin font-weight-classes {
+  @each $key, $value in $font_weights {
+    .font-weight-#{$value} {
+      font-weight: $value !important;
+    }
+  }
+}
+@include font-weight-classes;
+
+@mixin font-size-classes {
+  @each $size in $font_sizes {
+    .font-size-#{$size} {
+      font-size: $size + px !important;
+    }
+  }
+}
+@include font-size-classes;

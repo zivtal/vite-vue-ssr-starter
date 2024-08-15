@@ -1,0 +1,25 @@
+// Styles for elements with class ending in "__error"
+[class$='__error'] {
+  font-size: var(--font-size-16);
+  color: var(--color-red-700);
+  line-height: var(--line-height-16);
+}
+
+// Styles for elements with class ending in "__error--hidden"
+[class$='__error--hidden'] {
+  height: 0;
+}
+
+// Styles for elements with class ending in "__error" but not "__error--hidden"
+[class$='__error']:not([class$='__error--hidden']) {
+  height: 1.25rem;
+}
+
+// Styles for elements with class ending in "__error-internal"
+[class$='__error-internal'] {
+  display: none;
+
+  [validate='errors'] & {
+    display: initial;
+  }
+}

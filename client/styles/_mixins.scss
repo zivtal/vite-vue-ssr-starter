@@ -1,0 +1,293 @@
+@use 'sass:map';
+
+$height_width_percents: 25, 50, 75;
+$height_sizes: 32, 48, 64, 320;
+$width_sizes: 32, 48, 64, 96, 240, 320;
+
+// LAYOUT BREAKPOINTS
+$breakpoints: (
+  mobile: 540px,
+  tablet: 860px,
+  normal: 1080px,
+  breakpoint: 1280px,
+);
+
+/* Breakpoint mixins */
+@mixin lower-height {
+  @media (max-height: 500px) {
+    @content;
+  }
+}
+
+@mixin mobile-layout {
+  @media (max-width: map.get($breakpoints, 'mobile')) {
+    @content;
+  }
+}
+
+@mixin tablet-layout {
+  @media (min-width: map.get($breakpoints, 'mobile')) and (max-width: map.get($breakpoints, 'tablet')) {
+    @content;
+  }
+}
+
+@mixin normal-layout {
+  @media (min-width: map.get($breakpoints, 'tablet')) and (max-width: map.get($breakpoints, 'normal')) {
+    @content;
+  }
+}
+
+@mixin wide-layout {
+  @media (min-width: map.get($breakpoints, 'normal')) and (max-width: map.get($breakpoints, 'wide')) {
+    @content;
+  }
+}
+
+@mixin min-mobile-layout {
+  @media (min-width: map.get($breakpoints, 'mobile')) {
+    @content;
+  }
+}
+
+@mixin min-tablet-layout {
+  @media (min-width: map.get($breakpoints, 'tablet')) {
+    @content;
+  }
+}
+
+@mixin min-normal-layout {
+  @media (min-width: map.get($breakpoints, 'normal')) {
+    @content;
+  }
+}
+
+@mixin min-wide-layout {
+  @media (min-width: map.get($breakpoints, 'wide')) {
+    @content;
+  }
+}
+
+@mixin max-mobile-layout {
+  @media (max-width: map.get($breakpoints, 'mobile')) {
+    @content;
+  }
+}
+
+@mixin max-tablet-layout {
+  @media (max-width: map.get($breakpoints, 'tablet')) {
+    @content;
+  }
+}
+
+@mixin max-normal-layout {
+  @media (max-width: map.get($breakpoints, 'normal')) {
+    @content;
+  }
+}
+
+@mixin for-mobile($property, $mobile, $other: null) {
+  @media (max-width: map.get($breakpoints, 'mobile')) {
+    #{$property}: $mobile;
+  }
+
+  @media (min-width: map.get($breakpoints, 'mobile')) {
+    #{$property}: $other;
+  }
+}
+
+// direction
+
+@mixin rtl-content {
+  [dir='rtl'] & {
+    @content;
+  }
+}
+
+@mixin rtl($property, $rtl-value, $ltr-value: null) {
+  @if $ltr-value != null {
+    #{$property}: $ltr-value;
+  }
+
+  [dir='rtl'] & {
+    #{$property}: $rtl-value;
+  }
+}
+
+@mixin ltr($property, $ltr-value, $rtl-value: null) {
+  [dir='rtl'] & {
+    @if $rtl-value != null {
+      #{$property}: $rtl-value;
+    }
+  }
+
+  :not([dir='rtl'] &) {
+    #{$property}: $ltr-value;
+  }
+}
+
+@mixin inline-start($unit: 0) {
+  left: $unit;
+  right: initial;
+
+  [dir='rtl'] & {
+    left: initial;
+    right: $unit;
+  }
+}
+
+@mixin inline-end($unit) {
+  left: initial;
+  right: $unit;
+
+  [dir='rtl'] & {
+    left: $unit;
+    right: initial;
+  }
+}
+
+// width
+
+@mixin width-percent-classes {
+  @each $percent in $height_width_percents {
+    $width: $percent * 1%;
+    .width-p#{$percent} {
+      width: $width !important;
+    }
+  }
+}
+@include width-percent-classes;
+
+@mixin width-classes {
+  @each $size in $width_sizes {
+    $width: $size + px;
+    .width-#{$size} {
+      width: $width !important;
+    }
+  }
+}
+@include width-classes;
+
+@mixin max-width-classes {
+  @each $size in $width_sizes {
+    $width: $size + px;
+    .max-width-#{$size} {
+      max-width: $width !important;
+    }
+  }
+}
+@include max-width-classes;
+
+@mixin min-width-classes {
+  @each $size in $width_sizes {
+    $width: $size + px;
+    .min-width-#{$size} {
+      min-width: $width !important;
+    }
+  }
+}
+@include min-width-classes;
+
+// height
+
+@mixin height-percent-classes {
+  @each $percent in $height_width_percents {
+    $height: $percent * 1%;
+    .height-p#{$percent} {
+      height: $height !important;
+    }
+  }
+}
+@include height-percent-classes;
+
+@mixin height-classes {
+  @each $size in $height_sizes {
+    $height: $size + px;
+    .height-#{$size} {
+      height: $height !important;
+    }
+  }
+}
+@include height-classes;
+
+@mixin max-height-classes {
+  @each $size in $height_sizes {
+    $height: $size + px;
+    .max-height-#{$size} {
+      max-height: $height !important;
+    }
+  }
+}
+@include max-height-classes;
+
+@mixin min-height-classes {
+  @each $size in $height_sizes {
+    $height: $size + px;
+    .min-height-#{$size} {
+      min-height: $height !important;
+    }
+  }
+}
+@include min-height-classes;
+
+// pseudo
+
+@mixin before($top: 0, $left: 0, $right: 0, $bottom: 0, $width: 100%, $height: 100%, $index: 1) {
+  &:before {
+    content: '';
+    position: absolute;
+    top: $top;
+    left: $left;
+    right: $right;
+    bottom: $bottom;
+    width: $width;
+    height: $height;
+    z-index: $index;
+    @content;
+  }
+}
+
+@mixin after($top: 0, $left: 0, $right: 0, $bottom: 0, $width: 100%, $height: 100%, $index: 1) {
+  &:after {
+    content: '';
+    position: absolute;
+    top: $top;
+    left: $left;
+    right: $right;
+    bottom: $bottom;
+    width: $width;
+    height: $height;
+    z-index: $index;
+    @content;
+  }
+}
+
+// text
+
+@mixin max-lines($maxLines: 2) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  line-clamp: $maxLines;
+  -webkit-line-clamp: $maxLines;
+  -webkit-box-orient: vertical;
+}
+
+.max-line-1 {
+  @include max-lines(1);
+}
+
+.max-line-2 {
+  @include max-lines(2);
+}
+
+.max-line-3 {
+  @include max-lines(3);
+}
+
+// device
+
+@mixin hover-support {
+  @media (hover: hover) {
+    @content;
+  }
+}

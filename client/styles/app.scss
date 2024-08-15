@@ -1,6 +1,25 @@
 #app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+}
+
+html {
+  line-height: 1.5;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  overflow: hidden !important;
+}
+
+body {
+  color: var(--color-primary-900);
+  background-color: var(--color-background-regular) !important;
+
+  @include rtl(direction, rtl);
+
+  * {
+    touch-action: manipulation;
+  }
 }

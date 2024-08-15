@@ -1,0 +1,139 @@
+$primary: (
+  100: #f4f4f8,
+  200: #e4e4ee,
+  300: #dfdfef,
+  400: #32329b,
+  500: #252586,
+  600: #171779,
+  700: #191956,
+  800: #0a0a54,
+  900: #010143,
+);
+
+$warning: (
+  100: #f3ebee,
+  200: #f6eaeb,
+  300: #f3e4e6,
+  400: #f1d0cb,
+  500: #f8bbc5,
+  600: #f1abb5,
+  700: #d78798,
+  800: #b0596d,
+  900: #67081b,
+);
+
+$mono: (
+  100: #ffffff,
+  200: #f8f8f8,
+  300: #eeeded,
+  400: #b9b9b9,
+  500: #949393,
+  600: #858585,
+  700: #3f3f3f,
+  800: #2f2d2d,
+  900: #151515,
+);
+
+$mint: (
+  100: #9cd3dc,
+  200: #75bdc7,
+  300: #6bc7d0,
+  400: #31939f,
+  500: #1c8d9b,
+  600: #117883,
+  700: #0a6872,
+  800: #05383d,
+  900: #043336,
+);
+
+$green: (
+  100: #b6d7a6,
+  200: #a1e396,
+  300: #96e78a,
+  400: #57b24a,
+  500: #40bb2d,
+  600: #41ab34,
+  700: #2ca61a,
+  800: #1e700f,
+  900: #1a5010,
+);
+
+$yellow: (
+  100: #dad3ae,
+  200: #ded295,
+  300: #f7e483,
+  400: #f6d874,
+  500: #f4cf56,
+  600: #a68c34,
+  700: #9b6e2b,
+  800: #a47021,
+  900: #ab5b1d,
+);
+
+$red: (
+  100: #fde6d4,
+  200: #fbc7ab,
+  300: #f39f7f,
+  400: #e7795e,
+  500: #d82d2d,
+  600: #b90820,
+  700: #9b161c,
+  800: #7d0e1b,
+  900: #67081b,
+);
+
+$purple: (
+  100: #f3d4fd,
+  200: #f0abfb,
+  300: #d67ff3,
+  400: #de5ee7,
+  500: #ad2dd8,
+  600: #8708b9,
+  700: #6a169b,
+  800: #6e0e7d,
+  900: #520867,
+);
+
+$colors: (
+  'mono': $mono,
+  'primary': $primary,
+  'green': $green,
+  'yellow': $yellow,
+  'red': $red,
+  'mint': $mint,
+  'purple': $purple,
+);
+
+$colors_keys: 'mono', 'primary', 'green', 'yellow', 'red', 'mint', 'purple';
+
+:root {
+  @each $category, $colorMap in $colors {
+    @each $measure, $color in $colorMap {
+      --color-#{$category}-#{$measure}: #{$color};
+    }
+  }
+}
+
+@each $category, $colorMap in $colors {
+  @each $measure, $color in $colorMap {
+    .c-#{$category}-#{$measure} {
+      color: var(--color-#{$category}-#{$measure}) !important;
+    }
+
+    .bg-#{$category}-#{$measure} {
+      background: var(--color-#{$category}-#{$measure}) !important;
+    }
+  }
+}
+
+.bg-light {
+  background: var(--color-background-light) !important;
+}
+
+.bg-regular {
+  background: var(--color-background-regular) !important;
+}
+
+.bg-active {
+  background: var(--color-background-active);
+}
