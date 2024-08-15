@@ -7,10 +7,10 @@
 export default {
   methods: {
     goToHome() {
-      this.$router.push('/')
+      this.$router.push("/");
     },
   },
-}
+};
 </script>
 
 <style lang="scss" scoped></style>

@@ -1,105 +1,67 @@
-import express from 'express'
-import fs from 'node:fs'
-import path from 'node:path'
+import express from "express";
+import session from "express-session";
+import createMemoryStore from "memorystore";
+import bodyParser from "body-parser";
+import cookieParser from "cookie-parser";
+import config from "./config";
+import createViteSSR from "./create-vite-ssr";
 
-import { fileURLToPath } from 'node:url'
-import { ViteDevServer } from 'vite'
+// Memory store
+const MemoryStore = createMemoryStore(session);
 
-export async function createServer(): Promise<void> {
+// Create http server
+const app = express();
 
-  const app = express()
+app.use(bodyParser.json());
+app.use(cookieParser());
 
-  const __dirname = path.dirname(fileURLToPath(import.meta.url))
-  const resolve = (p: string) => path.resolve(__dirname, p)
-  const isProduction = process.env.NODE_ENV === 'production'
+// Set up session and cookie middleware
+// The data should be secure and stored in Redis
 
+app.use(
+  session({
+    store: new MemoryStore({ checkPeriod: 86400000 }), // 24h
+    secret: config.SESSION_KEY!,
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false, sameSite: "strict" },
+  }),
+);
 
-  let vite: ViteDevServer
-  let manifest: Record<string, any> = {}
-  let indexProd: string = ""
+// Data provider assets
+app.use("/static", express.static("public"));
+app.use("/sw.js", express.static("./sw.js"));
 
-  if (isProduction) {
+export const { vite, templateHtml } = await createViteSSR(app);
 
-    manifest = JSON.parse(
-      fs.readFileSync(
-        resolve("../dist/client/.vite/ssr-manifest.json"),
-        "utf-8"
-      )
-    )
-
-    indexProd = fs.readFileSync(
-      resolve("../dist/client/index.html"),
-      "utf-8"
-    )
-
-    app.use((await import("compression")).default())
-    app.use(
-      "/test", (
-      (await import("serve-static")).default(resolve("../dist/client"), {
-        index: false
-      })
-    )
-    )
-
-  } else {
-
-    vite = await (await import('vite')).createServer({
-      base: '/test/',
-      logLevel: 'info',
-      server: {
-        middlewareMode: true,
-      },
-    })
-
-    app.use(vite.middlewares)
-
-  }
-
-  app.use("*", async (req, res) => {
-
-    console.log("debug render")
-
-    try {
-      const url = req.originalUrl.replace('/test/', '/')
-
-      let template: string = ""
-      let render: (url: string) => Promise<{html: string}>
-      
-      if (!isProduction) {
-        // always read fresh template in dev
-        template = fs.readFileSync(resolve('../index.html'), 'utf-8')
-        template = await vite.transformIndexHtml(url, template)
-        render = (await vite.ssrLoadModule('../client/entry-server.ts')).render
-      } 
-      else {
-        template = indexProd
+// Serve HTML
+app.use("*", async (req, res) => {
+  try {
+    const url = req.originalUrl.replace("/test/", "/");
+    const render = async (url: string, isProduction: boolean = false) => {
+      if (isProduction) {
         // @ts-ignore
-        render = (await import('../dist/server/entry-server.js')).render
+        return (await import("../dist/client/entry-server.js")).render;
       }
 
-      const {html:appHtml} = await render(url)
+      await vite.transformIndexHtml(url, templateHtml);
+      return (await vite.ssrLoadModule("../client/entry-server.ts")).render;
+    };
 
-      const html = template
-        // .replace(`<!--preload-links-->`, preloadLinks)
-        .replace(`<!--app-html-->`, appHtml)
+    const { html: appHtml } = await render(url, config.IS_PRODUCTION);
+    const html = templateHtml.replace(`<!--app-html-->`, appHtml);
 
-      res.status(200).set({ 'Content-Type': 'text/html' }).end(html)
+    res.status(200).set({ "Content-Type": "text/html" }).end(html);
+  } catch (e: any) {
+    vite && vite.ssrFixStacktrace(e);
+    console.error(e.stack);
+    res.status(500).end(e.stack);
+  }
+});
 
-    } catch (e: any) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-      vite && vite.ssrFixStacktrace(e)
-      console.log(e.stack)
-      res.status(500).end(e.stack)
-
-    }
-
-  })
-
-  app.listen(8080, () => {
-    console.log(`Service ✅ Running on port 8080`);
-  })
-
-}
-
-createServer()
-
+// Start http server
+app.listen(config.PORT, () => {
+  console.log(
+    `Server started at http://localhost:${config.PORT} (${process.env.NODE_ENV})`,
+  );
+});
