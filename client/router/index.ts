@@ -5,23 +5,38 @@ import {
   type RouteRecordRaw,
 } from "vue-router";
 
-import HomeView from "../views/HomeView.vue";
-import AboutView from "../views/AboutView.vue";
+import Home from "../views/home.vue";
+import About from "../views/about.vue";
 
 const Index = [
-  { path: "/", component: HomeView },
-  { path: "/about", component: AboutView },
+  { path: "/", component: Home },
+  { path: "/about", component: About },
 ];
 
-export function buildRouter(routes: Readonly<Array<RouteRecordRaw>> = Index) {
+const load = () => {
+  try {
+    const routes = JSON.parse(localStorage.getItem("router")!);
+    return create(routes);
+  } catch (error) {
+    console.error("router:load", error);
+
+    throw error;
+  } finally {
+    localStorage.removeItem("router");
+  }
+};
+
+const create = (routes: Readonly<Array<RouteRecordRaw>> = Index) => {
   try {
     return createRouter({
       history: import.meta.env.SSR ? createMemoryHistory() : createWebHistory(),
       routes,
     });
   } catch (error) {
-    console.error(error);
+    console.error("router:create", error);
 
     throw error;
   }
-}
+};
+
+export { create, load };
