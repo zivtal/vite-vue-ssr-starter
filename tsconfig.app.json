@@ -35,5 +35,5 @@
     "@helpers/*": ["./client/shared/helpers/*"],
     "@locale/*": ["./client/locale/*"]
   },
-  "include": ["./client/**/*.ts", "./client/**/*.tsx", "./client/**/*.vue"]
+  "include": ["./client/**/*.ts", "./client/**/*.d.ts", "./client/**/*.vue"]
 }

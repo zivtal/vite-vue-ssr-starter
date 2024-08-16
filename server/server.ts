@@ -1,5 +1,5 @@
 // server.ts
-import express from 'express';
+import express, { type Request, type Response } from 'express';
 import session from 'express-session';
 import createMemoryStore from 'memorystore';
 import bodyParser from 'body-parser';
@@ -32,11 +32,19 @@ app.use('/sw.js', express.static('./sw.js'));
 
 export const { vite, render, templateHtml } = await createViteSSR(app);
 
+app.use('/manifest.json', (_: Request, res: Response) => {
+  res.status(200).type('application/manifest+json').json({});
+});
+
+app.use('/favicon.ico', (_: Request, res: Response) => {
+  res.status(200).type('image/x-icon').send('');
+});
+
 // Serve HTML
 app.use('*', async (req, res) => {
   try {
     const url = req.originalUrl.replace('/test/', '/');
-    const html = await render(url);
+    const html = await render(url, {});
 
     res.status(200).set({ 'Content-Type': 'text/html' }).end(html);
   } catch (e: any) {

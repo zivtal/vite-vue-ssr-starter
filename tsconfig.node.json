@@ -20,6 +20,7 @@
   "ts-node": {
     "esm": true
   },
+  "typeRoots": ["./client/node_modules/@types", "./server/shims"],
   "paths": {
     "@/*": ["./server/src/*"],
     "@config/*": ["./server/config/*"],
@@ -27,5 +28,5 @@
     "@shared/*": ["./server/shared/*"],
     "@json/*": ["./server/json/*"]
   },
-  "include": ["vite.config.ts", "*.ts", "server/**/*.ts"]
+  "include": ["vite.config.ts", "./server/**/*.d.ts", "./server/**/*.ts"]
 }

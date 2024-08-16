@@ -17,7 +17,7 @@ export default async (
   vite: ViteDevServer;
   templateHtml: string;
   ssrManifest?: Record<string, any>;
-  render: (url: string, data?: Record<string, any>) => Promise<string>;
+  render: (url: string, data: Record<string, any>) => Promise<string>;
 }> => {
   const __dirname = path.dirname(fileURLToPath(import.meta.url));
   const resolve = (p: string) => path.resolve(__dirname, p);
@@ -68,6 +68,7 @@ export default async (
 
       htmlContent('#root').html(appHtml);
       htmlContent('body').append(`<script>window.__SSR_DATA__=${JSON.stringify(state)}</script>`);
+      htmlContent('body').append(`<div id="app"><!--app-html--></div>`);
 
       const metaData = (() => {
         const route = (state.routers as Array<RouteRecordRaw>)?.find((router) => router.path === url);
