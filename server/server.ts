@@ -32,7 +32,7 @@ app.use('/sw.js', express.static('./sw.js'));
 
 export const { vite, render, templateHtml } = await createViteSSR(app);
 
-app.use('/manifest.json', (_: Request, res: Response) => {
+app.use('/manifest.json', (req: Request, res: Response) => {
   res.status(200).type('application/manifest+json').json({});
 });
 
