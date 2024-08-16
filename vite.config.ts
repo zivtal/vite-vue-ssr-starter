@@ -2,7 +2,7 @@ import path from 'node:path';
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import eslintPlugin from 'vite-plugin-eslint';
-import vueDevTools from 'vite-plugin-vue-devtools';
+import vueDevToolsPlugin from 'vite-plugin-vue-devtools';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -10,7 +10,7 @@ const resolve = (p: string) => path.resolve(__dirname, p);
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [vue(), eslintPlugin({ overrideConfigFile: resolve('.eslintrc.cjs') }), vueDevTools()],
+  plugins: [vue(), eslintPlugin({ overrideConfigFile: resolve('.eslintrc.cjs') }), vueDevToolsPlugin()],
   resolve: {
     alias: {
       '@': resolve('client'),
@@ -29,11 +29,11 @@ export default defineConfig({
     preprocessorOptions: {
       scss: {
         additionalData:
-          '@import "./client/styles/_variables.scss";' +
-          '@import "./client/styles/_mixins.scss";' +
-          '@import "./client/styles/_colors.scss";' +
-          '@import "./client/styles/_transitions.scss";' +
-          '@import "./client/styles/_fonts.scss";',
+          '@import "@styles/_variables.scss"; ' +
+          '@import "@styles/_mixins.scss"; ' +
+          '@import "@styles/_colors.scss"; ' +
+          '@import "@styles/_transitions.scss"; ' +
+          '@import "@styles/_fonts.scss"; ',
       },
     },
   },
