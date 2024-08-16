@@ -7,15 +7,17 @@
     <!--preload-links-->
 </head>
 
-<script>
+<script id="sw">
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', function () {
             navigator.serviceWorker.register('/sw.js').then(
                 function (registration) {
-                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                    console.info('ServiceWorker registration successful with scope: ', registration.scope);
+                    document.getElementById('sw').remove();
                 },
                 function (err) {
-                    console.log('ServiceWorker registration failed: ', err);
+                    console.error('ServiceWorker registration failed: ', err);
+                    document.getElementById('sw').remove();
                 }
             );
         });

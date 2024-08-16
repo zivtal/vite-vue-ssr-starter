@@ -65,9 +65,10 @@ export default async (
       htmlContent('head').append(rendered.head);
       htmlContent('head').append(`<style>:root { --primary-color: ${primaryColor}; --secondary-color: ${secondaryColor}; }</style>`);
       htmlContent('head').append(`<link rel="manifest" href="/manifest.json">`);
-
       htmlContent('#root').html(appHtml);
-      htmlContent('body').append(`<script>window.__SSR_DATA__=${JSON.stringify(state)}</script>`);
+      htmlContent('body').append(
+        `<script id="ssr-data">window.__SSR_DATA__=${JSON.stringify(state)};document.getElementById('ssr-data').remove();</script>`
+      );
       htmlContent('body').append(`<div id="app"><!--app-html--></div>`);
 
       const metaData = (() => {
