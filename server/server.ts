@@ -1,6 +1,6 @@
 // server.ts
 import express, { type Request, type Response } from 'express';
-import session from 'express-session';
+import expressSession from 'express-session';
 import createMemoryStore from 'memorystore';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
@@ -8,7 +8,7 @@ import config from './config';
 import createViteSSR from './create-vite-ssr';
 
 // Memory store
-const MemoryStore = createMemoryStore(session);
+const MemoryStore = createMemoryStore(expressSession);
 
 // Create http server
 const app = express();
@@ -17,7 +17,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(
-  session({
+  expressSession({
     store: new MemoryStore({ checkPeriod: 86400000 }), // 24h
     secret: config.SESSION_KEY!,
     resave: false,
@@ -30,9 +30,9 @@ app.use(
 app.use('/static', express.static('public'));
 app.use('/sw.js', express.static('./sw.js'));
 
-export const { vite, render, templateHtml } = await createViteSSR(app);
+export const { vite, render } = await createViteSSR(app);
 
-app.use('/manifest.json', (req: Request, res: Response) => {
+app.use('/manifest.json', (_: Request, res: Response) => {
   res.status(200).type('application/manifest+json').json({});
 });
 
