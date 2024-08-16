@@ -5,7 +5,8 @@ module.exports = {
         ecmaVersion: 'latest',
     },
     ignorePatterns: ['**/node_modules/**', '**/dist/**'],
-    rules: {
+    rules: 
+        {
         'max-lines': ['error', {max: 500, skipBlankLines: true}],
         'max-len': ['error', 150, {ignorePattern: '^import .*'}],
         'vue/attributes-order': ['error', {

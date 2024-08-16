@@ -25,6 +25,7 @@
     "@assets/*": ["./client/assets/*"],
     "@json/*": ["./client/json/*"],
     "@router/*": ["./client/router/*"],
+    "@services/*": ["./client/services/*"],
     "@shared/*": ["./client/shared/*"],
     "@store/*": ["./client/store/*"],
     "@styles/*": ["./client/assets/styles/*"],

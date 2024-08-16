@@ -16,6 +16,7 @@ export default defineConfig({
       '@': resolve('client'),
       '@assets': resolve('client/assets'),
       '@router': resolve('client/router'),
+      '@services': resolve('client/services'),
       '@shared': resolve('client/shared'),
       '@store': resolve('client/store'),
       '@styles': resolve('client/styles'),

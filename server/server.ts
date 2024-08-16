@@ -1,3 +1,4 @@
+// server.ts
 import express from 'express';
 import session from 'express-session';
 import createMemoryStore from 'memorystore';
@@ -35,7 +36,7 @@ export const { vite, render, templateHtml } = await createViteSSR(app);
 app.use('*', async (req, res) => {
   try {
     const url = req.originalUrl.replace('/test/', '/');
-    const html = await render(url, config.IS_PROD_ENV);
+    const html = await render(url);
 
     res.status(200).set({ 'Content-Type': 'text/html' }).end(html);
   } catch (e: any) {
