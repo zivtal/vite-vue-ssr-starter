@@ -47,7 +47,7 @@ export default async (
     return await (async () => {
       const render = isProd
         ? // @ts-ignore
-          (await import('../dist/client/entry-server.js')).render // /workspace added for digitalocean
+          (await import('../dist/server/entry-server.js')).render // workspace added for digitalocean, i fix your path for entry-server on dist folder
         : (await vite.ssrLoadModule('./client/entry-server.ts')).render;
 
       if (!isProd) {
