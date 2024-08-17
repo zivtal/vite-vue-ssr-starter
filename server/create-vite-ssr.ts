@@ -66,10 +66,7 @@ export default async (
       htmlContent('head').append(`<style>:root { --primary-color: ${primaryColor}; --secondary-color: ${secondaryColor}; }</style>`);
       htmlContent('head').append(`<link rel="manifest" href="/manifest.json">`);
       htmlContent('#root').html(appHtml);
-      htmlContent('body').append(
-        `<script id="ssr-data">window.__SSR_DATA__=${JSON.stringify(state)};document.getElementById('ssr-data').remove();</script>`
-      );
-      htmlContent('body').append(`<div id="app"><!--app-html--></div>`);
+      htmlContent('body').append(`<script id="ssr">window.__SSR_DATA__=${JSON.stringify(state)};document.getElementById('ssr').remove();</script>`);
 
       const metaData = (() => {
         const route = (state.routers as Array<RouteRecordRaw>)?.find((router) => router.path === url);
