@@ -4,17 +4,6 @@ import { createApp } from './main';
 export async function render(url: string) {
   const { app, router } = createApp();
 
-  // i comment out this section because this result to error on my side
-
-  // const appDiv = (() => {
-  //   const div = document.createElement('div');
-  //   div.id = 'app';
-
-  //   return div;
-  // })();
-
-  // document.querySelector('body')?.appendChild(appDiv);
-
   await router.push(url);
   await router.isReady();
 
