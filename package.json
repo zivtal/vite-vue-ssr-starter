@@ -5,11 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "npx tsx server/server.ts",
-    "build": "npm run build:client && npm run build:server",
+    "build": "rm -rf dist && npm run build:client && npm run build:server",
     "build:client": "vite build --ssrManifest .vite/ssr-manifest.json --outDir dist/client",
     "build:server": "vite build --ssr client/entry-server.ts --outDir dist/server",
     "serve": "NODE_ENV=production npx tsx server/server.ts",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "clean": "rm -rf node_modules && rm -rf package-lock.json && yarn.lock && npm install"
   },
   "dependencies": {
     "axios": "1.6.0",
