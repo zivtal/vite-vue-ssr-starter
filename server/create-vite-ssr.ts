@@ -1,4 +1,5 @@
 // create-vite-ssr.ts
+import type { Metadata } from './models/metadata';
 import { type ViteDevServer } from 'vite';
 import { type Express } from 'express';
 import * as cheerio from 'cheerio';
@@ -6,7 +7,7 @@ import fs from 'node:fs';
 import config from './config';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { RouteRecordRaw } from 'vue-router';
+import { SSRData } from './models/ssr-data';
 
 let vite: ViteDevServer;
 
@@ -17,7 +18,7 @@ export default async (
   vite: ViteDevServer;
   templateHtml: string;
   ssrManifest?: Record<string, any>;
-  render: (url: string, data: Record<string, any>) => Promise<string>;
+  render: (url: string, data: Record<string, any>, metaData: Metadata) => Promise<string>;
 }> => {
   const __dirname = path.dirname(fileURLToPath(import.meta.url));
   const resolve = (p: string) => path.resolve(__dirname, p);
@@ -28,12 +29,7 @@ export default async (
   if (!isProd) {
     const { createServer } = await import('vite');
 
-    vite = await createServer({
-      appType: 'custom',
-      server: { middlewareMode: true },
-      base: config.BASE_URL,
-    });
-
+    vite = await createServer({ appType: 'custom', server: { middlewareMode: true }, base: config.BASE_URL });
     app.use(vite.middlewares);
   } else {
     const compression = (await import('compression')).default;
@@ -43,9 +39,55 @@ export default async (
     app.use(config.BASE_URL, sirv('./dist/client', { extensions: [] }));
   }
 
-  const render = async (url: string, data: Record<string, any> = {}) => {
+  const renderStyle = (cheerioApi: cheerio.CheerioAPI, style?: SSRData['style']): void => {
+    if (!style) {
+      return;
+    }
+
+    const cssStyle = Object.entries(style || {})
+      .map(([selector, properties]) => {
+        return `${selector} {\n${Object.entries(properties)
+          .map(([property, value]) => ` ${property}: ${value};`)
+          .join('\n')}\n}`;
+      })
+      .join('\n\n');
+
+    cheerioApi('head').append(`<style>${cssStyle}</style>`);
+  };
+
+  const renderMeta = (cheerioApi: cheerio.CheerioAPI, metadata?: Metadata): void => {
+    if (metadata?.image) {
+      cheerioApi('head').append(
+        `<meta name="image" content="${metadata.image}" />`,
+        `<meta property="og:image" content="${metadata.image}" />`,
+        `<meta property="twitter:image" content="${metadata.image}" />`
+      );
+    }
+
+    if (metadata?.title) {
+      cheerioApi('head').append(
+        `<meta property="og:title" content="${metadata.title}" />`,
+        `<meta property="og:site_name" content="${metadata.title}" />`,
+        `<meta property="twitter:title" content="${metadata.title}" />`
+      );
+    }
+
+    if (metadata?.description) {
+      cheerioApi('head').append(
+        `<meta name="description" content="${metadata.description}" />`,
+        `<meta property="og:description" content="${metadata.description}" />`,
+        `<meta property="twitter:description" content="${metadata.description}" />`
+      );
+    }
+
+    if (metadata?.keywords?.length) {
+      cheerioApi('head').append(`<meta name="keywords" content="${(metadata.keywords || []).join(',')}" />`);
+    }
+  };
+
+  const render = async (url: string, data: SSRData = {}) => {
     return await (async () => {
-      const render = isProd
+      const ssrRender = isProd
         ? // @ts-ignore
           (await import('../dist/server/entry-server.js')).render // workspace added for digitalocean, i fix your path for entry-server on dist folder
         : (await vite.ssrLoadModule('./client/entry-server.ts')).render;
@@ -54,59 +96,22 @@ export default async (
         await vite.transformIndexHtml(url, templateHtml);
       }
 
-      const rendered = await render(url, ssrManifest);
-      const appHtml = await render({ path: url, data: {} });
+      const rendered = await ssrRender(url, ssrManifest);
+      const appHtml = await ssrRender({ path: url, data: {} });
 
-      const { meta, direction = 'ltr', primaryColor, secondaryColor, ...state } = data;
+      const { metadata, direction = 'ltr', style, ...state } = data;
 
-      const htmlContent = cheerio.load(templateHtml);
-      htmlContent('html').attr('dir', direction);
-      htmlContent('head').find('title').text(state.title);
-      htmlContent('head').append(rendered.head);
-      htmlContent('head').append(`<style>:root { --primary-color: ${primaryColor}; --secondary-color: ${secondaryColor}; }</style>`);
-      htmlContent('head').append(`<link rel="manifest" href="/manifest.json">`);
-      htmlContent('#root').html(appHtml);
-      htmlContent('body').append(`<script id="ssr">window.__SSR_DATA__=${JSON.stringify(state)};document.getElementById('ssr').remove();</script>`);
+      const cheerioApi = cheerio.load(templateHtml);
+      cheerioApi('html').attr('dir', direction as string);
+      cheerioApi('head').find('title').text(state.title);
+      cheerioApi('head').append(rendered.head);
+      cheerioApi('head').append(`<link rel="manifest" href="/manifest.json">`);
+      cheerioApi('#root').html(appHtml);
+      cheerioApi('body').append(`<script id="ssr">window.__SSR_DATA__=${JSON.stringify(state)};document.getElementById('ssr').remove();</script>`);
+      renderMeta(cheerioApi, metadata);
+      renderStyle(cheerioApi, style);
 
-      const metaData = (() => {
-        const route = (state.routers as Array<RouteRecordRaw>)?.find((router) => router.path === url);
-
-        return {
-          ...(meta || {}),
-          title: [meta?.title, route?.meta?.title].filter((val) => !!val).join(' - '),
-          description: route?.meta?.description || meta?.description,
-        };
-      })();
-
-      if (metaData.image) {
-        htmlContent('head').append(
-          `<meta name="image" content="${metaData.image}" />`,
-          `<meta property="og:image" content="${metaData.image}" />`,
-          `<meta property="twitter:image" content="${metaData.image}" />`
-        );
-      }
-
-      if (metaData.title) {
-        htmlContent('head').append(
-          `<meta property="og:title" content="${metaData.title}" />`,
-          `<meta property="og:site_name" content="${metaData.title}" />`,
-          `<meta property="twitter:title" content="${metaData.title}" />`
-        );
-      }
-
-      if (metaData.description) {
-        htmlContent('head').append(
-          `<meta name="description" content="${metaData.description}" />`,
-          `<meta property="og:description" content="${metaData.description}" />`,
-          `<meta property="twitter:description" content="${metaData.description}" />`
-        );
-      }
-
-      if (metaData.keywords?.length) {
-        htmlContent('head').append(`<meta name="keywords" content="${(metaData.keywords || []).join(',')}" />`);
-      }
-
-      return htmlContent.html();
+      return cheerioApi.html();
     })();
   };
 
