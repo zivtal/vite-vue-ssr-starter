@@ -10,58 +10,39 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 let vite: ViteDevServer;
+const isProduction = !!config.IS_PROD_ENV;
 
-export default async (
-  app: Express,
-  isProduction: boolean = !!config.IS_PROD_ENV
-): Promise<{ vite: ViteDevServer; render: (url: string, data: Record<string, any>) => Promise<string> }> => {
-  const __dirname = path.dirname(fileURLToPath(import.meta.url));
-  const resolve = (p: string) => path.resolve(__dirname, p);
-
-  const indexHtml = loadIndexHtml(isProduction, resolve);
-  const ssrManifest = loadSSRManifest(isProduction, resolve);
-
-  await serverInit(app, isProduction);
+export default async (app: Express): Promise<{ vite: ViteDevServer; render: (url: string, data: Record<string, any>) => Promise<string> }> => {
+  const indexHtml = loadIndexHtml();
+  await serverInit(app);
 
   const render = async (url: string, data: SSRData = {}) => {
-    const ssrRender = await loadSSRRender(isProduction);
+    const ssrRender = await loadSSRRender();
 
     if (!isProduction) {
       await vite.transformIndexHtml(url, indexHtml);
     }
 
-    const rendered = await ssrRender(url, ssrManifest);
     const appHtml = await ssrRender({ path: url, data: {} });
 
-    return buildHtml(indexHtml, appHtml, rendered.head, data);
+    return buildHtml(indexHtml, appHtml, data);
   };
 
   return { vite, render };
 };
 
-const loadIndexHtml = (isProduction: boolean, resolve: (p: string) => string): string => {
+const loadIndexHtml = (): string => {
+  const __dirname = path.dirname(fileURLToPath(import.meta.url));
   const filePath = isProduction ? '../dist/client/index.html' : '../index.html';
 
-  return fs.readFileSync(resolve(filePath), 'utf-8');
+  return fs.readFileSync(path.resolve(__dirname, filePath), 'utf-8');
 };
 
-const loadSSRManifest = (isProduction: boolean, resolve: (p: string) => string): Record<string, any> | undefined => {
-  if (!isProduction) {
-    return;
-  }
-
-  const manifestPath = '../dist/client/.vite/ssr-manifest.json';
-  return JSON.parse(fs.readFileSync(resolve(manifestPath), 'utf-8'));
-};
-
-const serverInit = async (app: Express, isProduction: boolean): Promise<void> => {
+const serverInit = async (app: Express): Promise<void> => {
   if (!isProduction) {
     const { createServer } = await import('vite');
-    vite = await createServer({
-      appType: 'custom',
-      server: { middlewareMode: true },
-      base: config.BASE_URL,
-    });
+
+    vite = await createServer({ appType: 'custom', server: { middlewareMode: true }, base: config.BASE_URL });
     app.use(vite.middlewares);
   } else {
     const compression = (await import('compression')).default;
@@ -72,18 +53,17 @@ const serverInit = async (app: Express, isProduction: boolean): Promise<void> =>
   }
 };
 
-const loadSSRRender = async (isProduction: boolean): Promise<any> => {
+const loadSSRRender = async (): Promise<any> => {
   // @ts-ignore
   return isProduction ? (await import('../dist/server/entry-server.js')).render : (await vite.ssrLoadModule('./client/entry-server.ts')).render;
 };
 
-const buildHtml = (templateHtml: string, appHtml: string, headContent: string, data: SSRData): string => {
+const buildHtml = (indexHtml: string, appHtml: string, data: SSRData): string => {
   const { metadata, direction = 'ltr', style, ...state } = data;
-  const cheerioApi = cheerio.load(templateHtml);
+  const cheerioApi = cheerio.load(indexHtml);
 
   cheerioApi('html').attr('dir', direction as string);
   cheerioApi('head').find('title').text(state.title);
-  cheerioApi('head').append(headContent);
   cheerioApi('head').append(`<link rel="manifest" href="/manifest.json">`);
   cheerioApi('#root').html(appHtml);
   cheerioApi('body').append(`<script id="ssr">window.__SSR_DATA__=${JSON.stringify(state)};document.getElementById('ssr').remove();</script>`);
