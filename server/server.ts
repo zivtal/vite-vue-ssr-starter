@@ -46,6 +46,8 @@ app.use('*', async (req, res) => {
     const url = req.originalUrl.replace('/test/', '/');
     const html = await render(url, {});
 
+    console.log('html serve', req.originalUrl);
+
     res.status(200).set({ 'Content-Type': 'text/html' }).end(html);
   } catch (e: any) {
     vite && vite.ssrFixStacktrace(e);
