@@ -29,12 +29,14 @@ interface Manifest {
   background_color: string;
 }
 
-export interface SSRData {
-  language?: string;
+export interface GetContent {
   direction?: ValueOf<Direction>;
   metadata?: Metadata;
   style?: Record<string, Record<string, string>>;
+  language?: string;
   favicon?: string;
   manifest: Manifest;
   [key: string]: any;
 }
+
+export type Content = GetContent;

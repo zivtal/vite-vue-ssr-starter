@@ -1,6 +1,6 @@
 // server.ts
-import type { BaseRequest, SSRData } from './models';
-import express, { type Response } from 'express';
+import type { BaseRequest } from './models';
+import express from 'express';
 import expressSession from 'express-session';
 import createMemoryStore from 'memorystore';
 import bodyParser from 'body-parser';
@@ -9,6 +9,8 @@ import config from './config';
 import createViteSSR from './create-vite-ssr';
 import { webController } from './api/web/web.controller';
 import { GET_CONTENT } from './api/web/web.constants';
+import dataRoute from './api/data/data.route';
+import webRoute from './api/web/web.route';
 
 // Memory store
 const MemoryStore = createMemoryStore(expressSession);
@@ -32,20 +34,28 @@ app.use(
 // Data provider assets
 app.use('/static', express.static('public'));
 app.use('/sw.js', express.static('./sw.js'));
+app.use('/', dataRoute);
+app.use('/', webRoute);
 
 export const { vite, render } = await createViteSSR(app);
 
-app.use('/manifest.json', async (req: BaseRequest<never, { lang?: string }>, res: Response<SSRData['manifest']>) => {
-  const { manifest } = await webController[GET_CONTENT](req);
-
-  res.status(200).type('application/manifest+json').json(manifest);
-});
-
-app.use('/favicon.ico', async (req: BaseRequest<never, { lang?: string }>, res: Response) => {
-  const { favicon } = await webController[GET_CONTENT](req);
-
-  res.status(200).type('image/x-icon').send(favicon);
-});
+// app.use('/manifest.json', async (req: BaseRequest<never, { lang?: string }>, res: Response<SSRData['manifest']>) => {
+//   const { manifest } = await webController[GET_CONTENT](req);
+//
+//   res.status(200).type('application/manifest+json').json(manifest);
+// });
+//
+// app.use('/favicon.ico', async (req: BaseRequest<never, { lang?: string }>, res: Response) => {
+//   try {
+//     const data = await webController[GET_CONTENT](req);
+//     const identify = req.session.identify || req.session.domain || req.headers.host;
+//     const favicon = await dataService[GET_DATA](data.favicon!, identify!);
+//
+//     res.status(200).type('image/x-icon').send(favicon);
+//   } catch (e) {
+//     res.status(204).send(e as any);
+//   }
+// });
 
 // Serve HTML
 app.use('*', async (req: BaseRequest<never, { lang?: string }>, res) => {

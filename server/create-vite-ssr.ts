@@ -1,5 +1,5 @@
 // create-vite-ssr.ts
-import type { SSRData } from './models';
+import type { Content } from './models';
 import { type ViteDevServer } from 'vite';
 import { type Express } from 'express';
 import * as cheerio from 'cheerio';
@@ -11,11 +11,11 @@ import { fileURLToPath } from 'node:url';
 let vite: ViteDevServer;
 const isProduction = !!config.IS_PROD_ENV;
 
-export default async (app: Express): Promise<{ vite: ViteDevServer; render: (url: string, data: SSRData) => Promise<string> }> => {
+export default async (app: Express): Promise<{ vite: ViteDevServer; render: (url: string, data: Content) => Promise<string> }> => {
   const indexHtml = loadIndexHtml();
   await serverInit(app);
 
-  const render = async (url: string, data: SSRData = {} as SSRData) => {
+  const render = async (url: string, data: Content = {} as Content) => {
     const ssrRender = await loadSSRRender();
 
     if (!isProduction) {
@@ -57,8 +57,8 @@ const loadSSRRender = async (): Promise<any> => {
   return isProduction ? (await import('../dist/server/entry-server.js')).render : (await vite.ssrLoadModule('./client/entry-server.ts')).render;
 };
 
-const buildHtml = (indexHtml: string, appHtml: string, data: SSRData): string => {
-  const { metadata, direction = 'ltr', style, ...state } = data;
+const buildHtml = (indexHtml: string, appHtml: string, data: Content): string => {
+  const { direction = 'ltr', metadata, style, ...state } = data;
   const cheerioApi = cheerio.load(indexHtml);
 
   cheerioApi('html').attr('dir', direction as string);
@@ -73,14 +73,14 @@ const buildHtml = (indexHtml: string, appHtml: string, data: SSRData): string =>
   return cheerioApi.html();
 };
 
-const renderStyle = (cheerioApi: cheerio.CheerioAPI, style?: SSRData['style']): void => {
+const renderStyle = (cheerioApi: cheerio.CheerioAPI, style?: Content['style']): void => {
   if (!style) {
     return;
   }
 
   const cssStyle = Object.entries(style)
     .map(([selector, properties]) => {
-      return `${selector} {\n${Object.entries(properties)
+      return `${selector} {\n${Object.entries(properties || {})
         .map(([property, value]) => ` ${property}: ${value};`)
         .join('\n')}\n}`;
     })
@@ -89,7 +89,7 @@ const renderStyle = (cheerioApi: cheerio.CheerioAPI, style?: SSRData['style']): 
   cheerioApi('head').append(`<style>${cssStyle}</style>`);
 };
 
-const renderMeta = (cheerioApi: cheerio.CheerioAPI, metadata?: SSRData['metadata']): void => {
+const renderMeta = (cheerioApi: cheerio.CheerioAPI, metadata?: Content['metadata']): void => {
   if (metadata?.image) {
     cheerioApi('head').append(
       `<meta name="image" content="${metadata.image}" />`,

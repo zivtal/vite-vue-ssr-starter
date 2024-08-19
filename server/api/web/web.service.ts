@@ -1,6 +1,6 @@
+import type { GetContent } from '../../models';
 import { GET_CONTENT, GET_WEBSITE_CONTENT } from './web.constants';
-import { SSRData } from '../../models';
-import { Http } from '../../services/http';
+import { Http } from '../../services';
 
 const getQuery = (params: Record<string, string | undefined>) => {
   return Object.keys(params)
@@ -10,11 +10,11 @@ const getQuery = (params: Record<string, string | undefined>) => {
 };
 
 export const webService = {
-  [GET_CONTENT]: async (identify: string, lang?: string, cookie?: string): Promise<SSRData> => {
+  [GET_CONTENT]: async (identify: string, lang?: string, cookie?: string): Promise<GetContent> => {
     try {
       const url = `${GET_WEBSITE_CONTENT}/${identify}?${getQuery({ lang })}`;
 
-      return await Http.get<SSRData>(url, { headers: { Cookie: cookie } });
+      return await Http.get<GetContent>(url, { headers: { Cookie: cookie } });
     } catch (e) {
       console.error('webService:get-content', e);
 
