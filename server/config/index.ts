@@ -7,7 +7,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const resolve = (p: string) => path.resolve(__dirname, p);
 
 try {
-  dotenv.config({ path: resolve(!IS_PRODUCTION ? '../../.env' : '../../.env.development') });
+  dotenv.config({ path: resolve(IS_PRODUCTION ? '../../.env' : '../../.env.development') });
 } catch (e) {
   console.error('dotenv:file', e);
   dotenv.config();
