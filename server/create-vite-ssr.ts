@@ -1,6 +1,5 @@
 // create-vite-ssr.ts
-import type { SSRData } from './models/ssr-data';
-import type { Metadata } from './models/metadata';
+import type { SSRData } from './models';
 import { type ViteDevServer } from 'vite';
 import { type Express } from 'express';
 import * as cheerio from 'cheerio';
@@ -12,11 +11,11 @@ import { fileURLToPath } from 'node:url';
 let vite: ViteDevServer;
 const isProduction = !!config.IS_PROD_ENV;
 
-export default async (app: Express): Promise<{ vite: ViteDevServer; render: (url: string, data: Record<string, any>) => Promise<string> }> => {
+export default async (app: Express): Promise<{ vite: ViteDevServer; render: (url: string, data: SSRData) => Promise<string> }> => {
   const indexHtml = loadIndexHtml();
   await serverInit(app);
 
-  const render = async (url: string, data: SSRData = {}) => {
+  const render = async (url: string, data: SSRData = {} as SSRData) => {
     const ssrRender = await loadSSRRender();
 
     if (!isProduction) {
@@ -90,7 +89,7 @@ const renderStyle = (cheerioApi: cheerio.CheerioAPI, style?: SSRData['style']): 
   cheerioApi('head').append(`<style>${cssStyle}</style>`);
 };
 
-const renderMeta = (cheerioApi: cheerio.CheerioAPI, metadata?: Metadata): void => {
+const renderMeta = (cheerioApi: cheerio.CheerioAPI, metadata?: SSRData['metadata']): void => {
   if (metadata?.image) {
     cheerioApi('head').append(
       `<meta name="image" content="${metadata.image}" />`,
