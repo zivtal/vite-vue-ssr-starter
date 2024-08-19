@@ -8,6 +8,13 @@ export const dataController = {
     try {
       const identify = req.session.identify || req.session.domain || req.headers.host;
       const isNoCache = req.query.cache === 'none';
+
+      if (!req.params.id) {
+        res.end();
+
+        return;
+      }
+
       const { type, data } = await dataService[GET_DATA](req.params.id, identify!);
 
       res

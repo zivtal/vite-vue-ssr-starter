@@ -1,6 +1,6 @@
-import axios, { type AxiosError, type AxiosResponse } from 'axios';
 import type { AxiosResponseInterceptor } from './index.ts';
 import type { ErrorResponse } from '../../../models';
+import axios, { type AxiosError, type AxiosResponse } from 'axios';
 import ServerError from '../server-error.ts';
 
 export const errorsInterceptor: AxiosResponseInterceptor = {

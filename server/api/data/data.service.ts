@@ -16,6 +16,7 @@ export const dataService = {
       return { type, data: Buffer.from(data, 'base64') };
     } catch (e) {
       console.error(`webService:${GET_WEBSITE_CONTENT}/${id}?templateId=${templateId}`, e);
+
       throw e;
     }
   },
