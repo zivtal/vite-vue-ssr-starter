@@ -26,16 +26,16 @@ export const webController = {
 
   [FAVICON]: async (req: BaseRequest<never, { lang?: string }>, res: Response) => {
     try {
-      const { favicon: id, [ID_KEY]: idKey } = await webController[GET_CONTENT](req);
+      const { favicon: faviconId, [ID_KEY]: idKey } = await webController[GET_CONTENT](req);
       const identify = req.session.identify || idKey;
 
-      if (!id || !identify) {
-        res.status(400).end();
+      if (!faviconId || !identify) {
+        res.status(204).end();
 
         return;
       }
 
-      const favicon = await dataService[GET_DATA](id, identify);
+      const favicon = await dataService[GET_DATA](faviconId, identify);
 
       res.status(200).type('image/x-icon').send(favicon.data);
     } catch (e) {

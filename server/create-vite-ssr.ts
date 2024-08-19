@@ -63,11 +63,7 @@ const buildHtml = (indexHtml: string, appHtml: string, data: Content): string =>
 
   cheerioApi('html').attr('dir', direction as string);
   cheerioApi('head').find('title').text(state.title);
-
-  if (data.manifest) {
-    cheerioApi('head').append(`<link rel="manifest" href="/manifest.json">`);
-  }
-
+  cheerioApi('head').append(`<link rel="manifest" href="/manifest.json">`);
   cheerioApi('#root').html(appHtml);
   cheerioApi('body').append(`<script id="ssr">window.__SSR_DATA__=${JSON.stringify(state)};document.getElementById('ssr').remove();</script>`);
 
@@ -79,6 +75,10 @@ const buildHtml = (indexHtml: string, appHtml: string, data: Content): string =>
 
 const renderStyle = (cheerioApi: cheerio.CheerioAPI, style?: Content['style']): void => {
   if (!style) {
+    return;
+  } else if (typeof style === 'string') {
+    cheerioApi('head').append(`<style>${style}</style>`);
+
     return;
   }
 
