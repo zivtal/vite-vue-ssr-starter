@@ -26,9 +26,16 @@ export const webController = {
 
   [FAVICON]: async (req: BaseRequest<never, { lang?: string }>, res: Response) => {
     try {
-      const data = req.session.favicon || (await webController[GET_CONTENT](req)).favicon;
+      const id = req.session.favicon || (await webController[GET_CONTENT](req)).favicon;
       const identify = req.session.identify || req.session.domain || req.headers.host;
-      const favicon = await dataService[GET_DATA](data!, identify!);
+
+      if (!id || !identify) {
+        res.end();
+
+        return;
+      }
+
+      const favicon = await dataService[GET_DATA](id, identify);
 
       res.status(200).type('image/x-icon').send(favicon.data);
     } catch (e) {
@@ -39,6 +46,10 @@ export const webController = {
   [MANIFEST]: async (req: BaseRequest<never, { lang?: string }>, res: Response) => {
     const manifest = req.session.manifest || (await webController[GET_CONTENT](req)).manifest;
 
-    res.status(200).type('application/manifest+json').json(manifest);
+    if (manifest) {
+      res.status(200).type('application/manifest+json').json(manifest);
+    } else {
+      res.end();
+    }
   },
 };
