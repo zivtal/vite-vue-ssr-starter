@@ -16,7 +16,7 @@ export const webService = {
 
       return await Http.get<GetContent>(url, { headers: { Cookie: cookie } });
     } catch (e) {
-      console.error('webService:get-content', e);
+      console.error(`webService:${GET_WEBSITE_CONTENT}`, e);
 
       throw e;
     }

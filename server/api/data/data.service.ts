@@ -1,6 +1,7 @@
 import type { GetDataRes } from './data.types';
 import { GET_DATA, GET_WEBSITE_DATA } from './data.constants.js';
 import { Http } from '../../services';
+import { GET_WEBSITE_CONTENT } from '../web/web.constants';
 
 const TIMEOUT = 3 * 60 * 1000; // 3 minutes
 
@@ -14,7 +15,7 @@ export const dataService = {
 
       return { type, data: Buffer.from(data, 'base64') };
     } catch (e) {
-      console.error('webService:get-data', url, e);
+      console.error(`webService:${GET_WEBSITE_CONTENT}/${id}?templateId=${templateId}`, e);
       throw e;
     }
   },
