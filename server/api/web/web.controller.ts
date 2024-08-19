@@ -21,7 +21,7 @@ export const webController = {
 
       return data;
     } catch (e) {
-      logger.error('webController:get-content', identify, language, e);
+      logger.error(`webController:get-content/${identify}`, e);
 
       return {} as GetContent;
     }
