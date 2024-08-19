@@ -1,18 +1,12 @@
-import type { GetContent } from '../../models';
-import { GET_CONTENT, GET_WEBSITE_CONTENT } from './web.constants';
+import type { GetContent, GetContentReq } from '../../models';
+import { GET_CONTENT } from './web.constants';
 import { Http } from '../../services';
 import config from '../../config';
-
-const getQuery = (params: Record<string, string | undefined>) => {
-  return Object.keys(params)
-    .filter((key) => !!params[key])
-    .map((key) => `${key}=${params[key]}`)
-    .join('&');
-};
+import { getUrlWithQuery } from '../../helpers';
 
 export const webService = {
-  [GET_CONTENT]: async (host: string, lang?: string, cookie?: string): Promise<GetContent> => {
-    const url = `${GET_WEBSITE_CONTENT}/${host}?${getQuery({ lang })}`;
+  [GET_CONTENT]: async (host: string, query: GetContentReq, cookie?: string): Promise<GetContent> => {
+    const url = getUrlWithQuery(`${GET_CONTENT}/${host}`, query);
 
     try {
       return await Http.get<GetContent>(url, { headers: { Cookie: cookie } });

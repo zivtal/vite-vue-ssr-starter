@@ -1,4 +1,5 @@
 import { ValueOf } from './value-of';
+import { ID_KEY } from '../api/web/web.constants';
 
 enum Direction {
   LTR = 'ltr',
@@ -30,6 +31,7 @@ interface Manifest {
 }
 
 export interface GetContent {
+  [ID_KEY]: string;
   direction?: ValueOf<Direction>;
   metadata?: Metadata;
   style?: Record<string, Record<string, string>>;
@@ -40,3 +42,5 @@ export interface GetContent {
 }
 
 export type Content = GetContent;
+
+export type GetContentReq = Partial<{ lang: string; currency: string }>;
