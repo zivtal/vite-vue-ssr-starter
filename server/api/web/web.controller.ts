@@ -4,7 +4,6 @@ import { FAVICON, GET_CONTENT, MANIFEST } from './web.constants';
 import { webService } from './web.service';
 import { dataService } from '../data/data.service';
 import { GET_DATA } from '../data/data.constants';
-import { logger } from '../../services';
 
 export const webController = {
   [GET_CONTENT]: async (req: BaseRequest<never, { lang?: string }>): Promise<GetContent> => {
@@ -21,8 +20,6 @@ export const webController = {
 
       return data;
     } catch (e) {
-      logger.error(`webController:get-content/${identify}`, e);
-
       return {} as GetContent;
     }
   },

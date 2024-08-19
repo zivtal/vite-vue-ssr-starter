@@ -12,12 +12,12 @@ const getQuery = (params: Record<string, string | undefined>) => {
 
 export const webService = {
   [GET_CONTENT]: async (identify: string, lang?: string, cookie?: string): Promise<GetContent> => {
-    try {
-      const url = `${GET_WEBSITE_CONTENT}/${identify}?${getQuery({ lang })}`;
+    const url = `${GET_WEBSITE_CONTENT}/${identify}?${getQuery({ lang })}`;
 
+    try {
       return await Http.get<GetContent>(url, { headers: { Cookie: cookie } });
     } catch (e) {
-      console.error(`webService:${config.BASE_API}/${GET_WEBSITE_CONTENT}`, e);
+      console.error(`webService:${config.BASE_API}/${url}`, e);
 
       throw e;
     }
