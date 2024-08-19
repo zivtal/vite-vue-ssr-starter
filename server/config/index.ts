@@ -15,8 +15,8 @@ try {
 
 export default {
   IS_PROD_ENV: IS_PRODUCTION,
-  PORT: process.env.PORT,
-  BASE_URL: process.env.BASE_URL,
-  BASE_API: process.env.BASE_API,
+  PORT: process.env.PORT || 4000,
+  BASE_URL: process.env.BASE_URL || '/',
+  BASE_API: process.env.BASE_API || '/api',
   SESSION_KEY: process.env.SESSION_KEY,
 };

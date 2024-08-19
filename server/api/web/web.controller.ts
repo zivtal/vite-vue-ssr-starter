@@ -10,16 +10,21 @@ export const webController = {
   [GET_CONTENT]: async (req: BaseRequest<never, { lang?: string }>): Promise<GetContent> => {
     const language = req.query.lang || req.session.language;
     const identify = req.session.identify || req.session.domain || req.headers.host;
-    const data = (await webService[GET_CONTENT](identify!, language, req.headers.cookie)) || {};
 
-    req.session.identify = data.templateId;
-    req.session.domain = req.headers.host;
-    req.session.favicon = data.favicon;
-    req.session.manifest = data.manifest;
+    try {
+      const data = (await webService[GET_CONTENT](identify!, language, req.headers.cookie)) || {};
 
-    logger.info('webController:get-content', data);
+      req.session.identify = data.templateId;
+      req.session.domain = req.headers.host;
+      req.session.favicon = data.favicon;
+      req.session.manifest = data.manifest;
 
-    return data;
+      return data;
+    } catch (e) {
+      logger.error('webController:get-content', identify, language, e);
+
+      return {} as GetContent;
+    }
   },
 
   [FAVICON]: async (req: BaseRequest<never, { lang?: string }>, res: Response) => {

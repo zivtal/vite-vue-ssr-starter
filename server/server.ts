@@ -39,24 +39,6 @@ app.use('/', webRoute);
 
 export const { vite, render } = await createViteSSR(app);
 
-// app.use('/manifest.json', async (req: BaseRequest<never, { lang?: string }>, res: Response<SSRData['manifest']>) => {
-//   const { manifest } = await webController[GET_CONTENT](req);
-//
-//   res.status(200).type('application/manifest+json').json(manifest);
-// });
-//
-// app.use('/favicon.ico', async (req: BaseRequest<never, { lang?: string }>, res: Response) => {
-//   try {
-//     const data = await webController[GET_CONTENT](req);
-//     const identify = req.session.identify || req.session.domain || req.headers.host;
-//     const favicon = await dataService[GET_DATA](data.favicon!, identify!);
-//
-//     res.status(200).type('image/x-icon').send(favicon);
-//   } catch (e) {
-//     res.status(204).send(e as any);
-//   }
-// });
-
 // Serve HTML
 app.use('*', async (req: BaseRequest<never, { lang?: string }>, res) => {
   try {
