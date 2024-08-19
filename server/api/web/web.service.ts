@@ -1,6 +1,7 @@
 import type { GetContent } from '../../models';
 import { GET_CONTENT, GET_WEBSITE_CONTENT } from './web.constants';
 import { Http } from '../../services';
+import config from '../../config';
 
 const getQuery = (params: Record<string, string | undefined>) => {
   return Object.keys(params)
@@ -16,7 +17,7 @@ export const webService = {
 
       return await Http.get<GetContent>(url, { headers: { Cookie: cookie } });
     } catch (e) {
-      console.error(`webService:${GET_WEBSITE_CONTENT}`, e);
+      console.error(`webService:${config.BASE_API}/${GET_WEBSITE_CONTENT}`, e);
 
       throw e;
     }
