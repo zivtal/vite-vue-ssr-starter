@@ -12,17 +12,18 @@
         window.addEventListener('load', function () {
             navigator.serviceWorker.register('/sw.js').then(
                 function (registration) {
-                    console.info('ServiceWorker registration successful with scope: ', registration.scope);
+                    console.info('ServiceWorker:registration','successful with scope: ', registration.scope);
                     document.getElementById('sw').remove();
                 },
                 function (err) {
-                    console.error('ServiceWorker registration failed: ', err);
+                    console.error('ServiceWorker:registration','failed: ', err);
                     document.getElementById('sw').remove();
                 }
             );
         });
     }
 </script>
+
 <script lang="ts" type="module" src="/client/entry-client.ts"></script>
 
 <body></body>

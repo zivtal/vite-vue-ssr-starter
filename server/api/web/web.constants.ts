@@ -5,3 +5,6 @@ export const MANIFEST = 'manifest';
 
 // remote api
 export const GET_WEBSITE_CONTENT = 'get-website-content';
+
+// keys
+export const ID_KEY = 'templateId';

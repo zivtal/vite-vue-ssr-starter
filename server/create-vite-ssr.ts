@@ -11,7 +11,7 @@ import { fileURLToPath } from 'node:url';
 let vite: ViteDevServer;
 const isProduction = !!config.IS_PROD_ENV;
 
-export default async (app: Express): Promise<{ vite: ViteDevServer; render: (url: string, data: Content) => Promise<string> }> => {
+export default async (app: Express): Promise<{ vite: ViteDevServer; render: (url: string, data?: Content) => Promise<string> }> => {
   const indexHtml = loadIndexHtml();
   await serverInit(app);
 
@@ -63,7 +63,11 @@ const buildHtml = (indexHtml: string, appHtml: string, data: Content): string =>
 
   cheerioApi('html').attr('dir', direction as string);
   cheerioApi('head').find('title').text(state.title);
-  cheerioApi('head').append(`<link rel="manifest" href="/manifest.json">`);
+
+  if (data.manifest) {
+    cheerioApi('head').append(`<link rel="manifest" href="/manifest.json">`);
+  }
+
   cheerioApi('#root').html(appHtml);
   cheerioApi('body').append(`<script id="ssr">window.__SSR_DATA__=${JSON.stringify(state)};document.getElementById('ssr').remove();</script>`);
 

@@ -1,6 +1,6 @@
 import type { Response } from 'express';
 import type { BaseRequest, GetContent } from '../../models';
-import { FAVICON, GET_CONTENT, MANIFEST } from './web.constants';
+import { FAVICON, GET_CONTENT, ID_KEY, MANIFEST } from './web.constants';
 import { webService } from './web.service';
 import { dataService } from '../data/data.service';
 import { GET_DATA } from '../data/data.constants';
@@ -8,12 +8,12 @@ import { GET_DATA } from '../data/data.constants';
 export const webController = {
   [GET_CONTENT]: async (req: BaseRequest<never, { lang?: string }>): Promise<GetContent> => {
     const language = req.query.lang || req.session.language;
-    const identify = req.session.identify || req.session.domain || req.headers.host;
+    const identify = req.session.domain || req.headers.host;
 
     try {
       const data = (await webService[GET_CONTENT](identify!, language, req.headers.cookie)) || {};
 
-      req.session.identify = data.templateId;
+      req.session.identify = data[ID_KEY];
       req.session.domain = req.headers.host;
       req.session.favicon = data.favicon;
       req.session.manifest = data.manifest;
@@ -26,11 +26,11 @@ export const webController = {
 
   [FAVICON]: async (req: BaseRequest<never, { lang?: string }>, res: Response) => {
     try {
-      const id = req.session.favicon || (await webController[GET_CONTENT](req)).favicon;
-      const identify = req.session.identify || req.session.domain || req.headers.host;
+      const { favicon: id, [ID_KEY]: idKey } = await webController[GET_CONTENT](req);
+      const identify = req.session.identify || idKey;
 
       if (!id || !identify) {
-        res.end();
+        res.status(400).end();
 
         return;
       }
@@ -49,7 +49,7 @@ export const webController = {
     if (manifest) {
       res.status(200).type('application/manifest+json').json(manifest);
     } else {
-      res.end();
+      res.status(204).end();
     }
   },
 };

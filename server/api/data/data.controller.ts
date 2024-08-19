@@ -6,11 +6,11 @@ import { dataService } from './data.service.ts';
 export const dataController = {
   [GET_DATA]: async (req: BaseGetRequest<{ cache?: 'none' }, { id: string }>, res: Response<Buffer>) => {
     try {
-      const identify = req.session.identify || req.session.domain || req.headers.host;
+      const identify = req.session.identify;
       const isNoCache = req.query.cache === 'none';
 
-      if (!req.params.id) {
-        res.end();
+      if (!req.params.id || !identify) {
+        res.status(400).end();
 
         return;
       }

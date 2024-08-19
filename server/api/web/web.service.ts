@@ -11,8 +11,8 @@ const getQuery = (params: Record<string, string | undefined>) => {
 };
 
 export const webService = {
-  [GET_CONTENT]: async (identify: string, lang?: string, cookie?: string): Promise<GetContent> => {
-    const url = `${GET_WEBSITE_CONTENT}/${identify}?${getQuery({ lang })}`;
+  [GET_CONTENT]: async (host: string, lang?: string, cookie?: string): Promise<GetContent> => {
+    const url = `${GET_WEBSITE_CONTENT}/${host}?${getQuery({ lang })}`;
 
     try {
       return await Http.get<GetContent>(url, { headers: { Cookie: cookie } });
