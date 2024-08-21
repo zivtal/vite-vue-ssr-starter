@@ -50,7 +50,7 @@ export const webController = {
   },
 
   [MANIFEST]: async (req: BaseRequest<never, { lang?: string }>, res: Response) => {
-    const manifest = req.session.manifest || (await webController[GET_CONTENT](req)).manifest || {};
+    const manifest = req.session.manifest || (await webController[GET_CONTENT](req)).manifest;
 
     if (manifest) {
       res.status(200).type('application/manifest+json').json(manifest);
