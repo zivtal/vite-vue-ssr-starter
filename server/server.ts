@@ -24,7 +24,7 @@ app.use(cookieParser());
 app.use(
   expressSession({
     store: new MemoryStore({ checkPeriod: 86400000 }), // 24h
-    secret: config.SESSION_KEY!,
+    secret: config.SESSION_KEY,
     resave: false,
     saveUninitialized: true,
     cookie: { secure: false, sameSite: 'strict' },

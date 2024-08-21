@@ -18,5 +18,5 @@ export default {
   PORT: process.env.PORT || 4000,
   BASE_URL: process.env.BASE_URL || '/',
   BASE_API: process.env.BASE_API || '/api',
-  SESSION_KEY: process.env.SESSION_KEY,
+  SESSION_KEY: process.env.SESSION_KEY!,
 };
