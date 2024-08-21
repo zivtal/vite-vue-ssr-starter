@@ -13,8 +13,8 @@ export const webController = {
     try {
       const data = (await webService[GET_CONTENT](host, { lang }, req.headers.cookie)) || {};
 
-      req.session.identify = data[ID_KEY];
       req.session.domain = req.headers.host;
+      req.session.identify = data[ID_KEY];
       req.session.favicon = data.favicon;
       req.session.manifest = data.manifest;
 
@@ -37,6 +37,12 @@ export const webController = {
 
       const favicon = await dataService[GET_DATA](faviconId, identify);
 
+      if (!favicon) {
+        res.status(204).end();
+
+        return;
+      }
+
       res.status(200).type('image/x-icon').send(favicon.data);
     } catch (e) {
       res.status(204).send(e as any);
@@ -44,12 +50,12 @@ export const webController = {
   },
 
   [MANIFEST]: async (req: BaseRequest<never, { lang?: string }>, res: Response) => {
-    const manifest = req.session.manifest || (await webController[GET_CONTENT](req)).manifest;
+    const manifest = req.session.manifest || (await webController[GET_CONTENT](req)).manifest || {};
 
     if (manifest) {
       res.status(200).type('application/manifest+json').json(manifest);
     } else {
-      res.status(204).end();
+      res.status(404).end();
     }
   },
 };
