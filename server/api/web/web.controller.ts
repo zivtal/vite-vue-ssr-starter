@@ -6,7 +6,7 @@ import { dataService } from '../data/data.service';
 import { GET_DATA } from '../data/data.constants';
 
 export const webController = {
-  [GET_CONTENT]: async (req: BaseRequest<never, { lang?: string }>): Promise<GetContent> => {
+  [GET_CONTENT]: async (req: BaseRequest<never, GetContentReq>): Promise<GetContent> => {
     const host = (req.session.domain || req.headers.host)!;
     const { lang = req.session.language } = req.query;
 
