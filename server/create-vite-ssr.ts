@@ -58,11 +58,11 @@ const loadSSRRender = async (): Promise<any> => {
 };
 
 const buildHtml = (indexHtml: string, appHtml: string, data: Content): string => {
-  const { direction = 'ltr', metadata, style, ...state } = data;
+  const { direction = 'ltr', metadata, title, favicon, manifest, style, ...state } = data;
   const cheerioApi = cheerio.load(indexHtml);
 
   cheerioApi('html').attr('dir', direction as string);
-  cheerioApi('head').find('title').text(state.title);
+  cheerioApi('head').find('title').text(title);
   cheerioApi('head').append(`<link rel="manifest" href="/manifest.json">`);
   cheerioApi('#root').html(appHtml);
   cheerioApi('body').append(`<script id="ssr">window.__SSR_DATA__=${JSON.stringify(state)};document.getElementById('ssr').remove();</script>`);

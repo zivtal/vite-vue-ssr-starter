@@ -25,16 +25,5 @@ export default defineConfig({
       '@components': resolve('client/components'),
     },
   },
-  css: {
-    preprocessorOptions: {
-      scss: {
-        additionalData:
-          '@import "@styles/_variables.scss"; ' +
-          '@import "@styles/_mixins.scss"; ' +
-          '@import "@styles/_colors.scss"; ' +
-          '@import "@styles/_transitions.scss"; ' +
-          '@import "@styles/_fonts.scss"; ',
-      },
-    },
-  },
+  css: { preprocessorOptions: { scss: { additionalData: '@use "@styles/global.scss" as *;' } } },
 });

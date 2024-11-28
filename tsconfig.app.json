@@ -24,16 +24,17 @@
     "@/*": ["./client/*"],
     "@assets/*": ["./client/assets/*"],
     "@json/*": ["./client/json/*"],
+    "@plugins/*": ["./client/plugins/*"],
     "@router/*": ["./client/router/*"],
     "@services/*": ["./client/services/*"],
     "@shared/*": ["./client/shared/*"],
+    "@locale/*": ["./client/shared/locales/*"],
     "@store/*": ["./client/store/*"],
     "@styles/*": ["./client/assets/styles/*"],
     "@views/*": ["./client/views/*"],
     "@components/*": ["./client/shared/components/*"],
     "@directives/*": ["./client/shared/directives/*"],
-    "@helpers/*": ["./client/shared/helpers/*"],
-    "@locale/*": ["./client/locale/*"]
+    "@helpers/*": ["./client/shared/helpers/*"]
   },
   "include": ["./client/**/*.ts", "./client/**/*.d.ts", "./client/**/*.vue"]
 }
